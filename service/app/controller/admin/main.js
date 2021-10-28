@@ -10,15 +10,15 @@ class MainController extends Controller {
 
     // 判断用户密码是否正确
     async checkLogin() {
-        console.log(this.ctx.request, '请求报文')
+        console.log('验证用户密码登录请求报文:', '\n', this.ctx.request)
         let userName = this.ctx.request.userName || 'fongahao';
         let password = this.ctx.request.password || '123456';
         const sql = `SELECT userName FROM admin_user WHERE userName = '${userName}' AND password = '${password}'`;
 
-        console.log(sql, 'sql')
+        // console.log(sql, 'sql')
 
         const res = await this.app.mysql.query(sql);
-        console.log(res, '后台登录请求数据')
+        console.log('后台登录请求数据', res)
         if (res.length > 0) {
             // 登陆成功,进行session缓存
             let openId = new Date().getTime();
@@ -27,7 +27,7 @@ class MainController extends Controller {
         } else {
             this.ctx.body = { 'data': '登录失败' }
         }
-        console.log(this.ctx.session, 'this.ctx.session')
+        console.log('this.ctx.session', this.ctx.session)
     }
 
     // 向数据库获取后台文章分类信息
@@ -40,9 +40,10 @@ class MainController extends Controller {
     async addArticle() {
         // 请求报文体的数据
         const tmpArticle = this.ctx.request.body;
-        console.log(this.ctx.request.body, '插入文章insert');
+        console.log('插入文章请求报文体:', this.ctx.request.body);
 
         const result = await this.app.mysql.insert('article', tmpArticle);
+        console.log('插入文章结果:', result)
         const insertSuccess = result.affectedRows === 1;
         const insertId = result.insertId;
 
@@ -78,7 +79,7 @@ class MainController extends Controller {
         type.typeName as typeName
         from article left join type on article.type_id = type.id
         order by article.id desc`;
-        
+
         const result = await this.app.mysql.query(sql);
         this.ctx.body = { list: result };
     }
@@ -93,8 +94,7 @@ class MainController extends Controller {
         console.log('删除文章delArticle:', res, '\n', '删除文章的ID', this.ctx.params)
     }
 
-
-    //根据文章ID得到文章详情，用于修改文章
+    // 根据文章ID得到文章详情，用于修改文章
     async getArticleById() {
         let id = this.ctx.params.id
 
@@ -108,7 +108,7 @@ class MainController extends Controller {
             'type.id as typeId ' +
             'FROM article LEFT JOIN type ON article.type_id = type.id ' +
             'WHERE article.id=' + id;
-            
+
         const result = await this.app.mysql.query(sql)
         this.ctx.body = { data: result }
     }

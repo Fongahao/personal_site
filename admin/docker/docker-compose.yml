@@ -1,0 +1,19 @@
+version: '3'
+services:
+
+  admin:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    image: react_blog:admin
+    ports:
+      - 8080:80
+    volumes:
+      - ../build:/www
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+    container_name: react_blog_admin
+    networks:
+      - react_network
+      
+networks:
+  react_network:

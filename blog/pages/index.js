@@ -13,10 +13,12 @@ import Advert from '../components/Advert';
 import Footer from '../components/Footer';
 import ContentHeader from '../components/ContentHeader';
 import '../styles/pages/index.css';
-import servicePath from '../config/apiUrl';
+import { serviceAPI, clientAPI } from '../config/apiUrl';
 
-const Home = (list) => {
 
+
+const Home = ({ list, postType }) => {
+  console.log('list', list)
   const [mylist, setMylist] = useState(list.data);
   const renderer = new marked.Renderer();
   marked.setOptions({
@@ -42,7 +44,7 @@ const Home = (list) => {
       <Head>
         <title>Home</title>
       </Head>
-      <Header />
+      <Header postType={postType} />
       <Author />
       <Row className="comm-main" type="flex" justify="center">
 
@@ -55,7 +57,10 @@ const Home = (list) => {
               <List.Item>
 
                 <div className="list-title">
-                  <Link href={{ pathname: '/detailed', query: { id: item.id } }}>
+                  <Link href={{
+                    pathname: '/detailed',
+                    query: { id: item.id }
+                  }}>
                     <a>{item.title + item.id}</a>
                   </Link>
                 </div>
@@ -74,7 +79,7 @@ const Home = (list) => {
 
         <Col className="comm-right" xs={0} sm={0} md={7} lg={5} xl={4} >
           <Author />
-          <Advert />
+          {/* <Advert /> */}
         </Col>
       </Row>
       <Footer />
@@ -82,20 +87,55 @@ const Home = (list) => {
   )
 }
 
-Home.getInitialProps = async () => {
+// Home.getInitialProps = async () => {
 
-  const promise = new Promise((resolve) => {
-    axios(servicePath.getArticleList).then(
-      (res) => {
-        console.log('远程获取数据结果:', res.data.data);
-        resolve(res.data);
-      }
-    )
-  })
+//   const promise = new Promise((resolve) => {
+//     axios(servicePath.getArticleList).then((res) => {
+//       console.log('远程获取数据结果:', res.data.data);
+//       resolve(res.data);
+//     }
+//     )
+//   })
 
-  return await promise;
+//   return await promise;
+// }
+
+
+// This gets called on every request
+// 静态生成 在 build构建时就发接口获取数据 然后控制容器开启比较麻烦，就先这样吧。
+export async function getServerSideProps() {
+  try {
+
+    console.log('index页面请求URL:', serviceAPI.getArticleList);
+    const res = await axios(serviceAPI.getArticleList)
+    console.log('index页面请求文章列表:', res.data);
+    const list = res.data
+    // const list = await res.json()
+
+    return {
+      props: { list, },
+    }
+  } catch (e) {
+
+    console.error(e)
+    // throw e
+    return {
+      props: { list: [], },
+    }
+  }
 }
 
-
+// export async function getStaticProps() {
+//   try {
+//     const res = await axios(serviceAPI.getTypeInfo)
+//     console.log('这里是Header:', res)
+//     const postType = res
+//     return {
+//       props: { postType, },
+//     }
+//   } catch (e) {
+//     console.error(e)
+//   }
+// }
 
 export default Home

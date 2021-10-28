@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import servicePath from '../config/apiUrl';
+import { serviceAPI, clientAPI } from '../config/apiUrl';
 import Link from 'next/link';
 import Head from 'next/head';
 import { Row, Col, List, Breadcrumb } from 'antd';
@@ -20,7 +20,8 @@ const Postlist = (list) => {
             <Head>
                 <title>文章列表</title>
             </Head>
-            <Header />
+            {/* <Header /> */}
+
             <Row className="comm-main" type="flex" justify="center">
                 <Col className="comm-left" xs={24} sm={24} md={16} lg={18} xl={14}  >
                     <div>
@@ -56,7 +57,6 @@ const Postlist = (list) => {
 
                 <Col className="comm-right" xs={0} sm={0} md={7} lg={5} xl={4}>
                     <Author />
-                    <Advert />
                 </Col>
             </Row>
             <Footer />
@@ -65,12 +65,13 @@ const Postlist = (list) => {
 
 }
 
-Postlist.getInitialProps = async (context) => {
+Postlist.getInitialProps = async () => {
 
-    let id = context.query.id
     const promise = new Promise((resolve) => {
-        axios(servicePath.getListById + id).then(
-            (res) => resolve(res.data)
+        axios(serviceAPI.getArticleList).then((res) => {
+            console.log('列表页面服务端渲染请求数据:', res.data);
+            resolve(res.data)
+        }
         )
     })
     return await promise

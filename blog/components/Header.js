@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
-import serviceParh from '../config/apiUrl';
+import { serviceAPI, clientAPI } from '../config/apiUrl';
 import '../styles/components/header.css';
 import { Row, Col, Menu } from 'antd';
 import {
@@ -12,23 +12,26 @@ import {
 } from '@ant-design/icons';
 
 
-const Header = () => {
-
+const Header = (props) => {
+    console.log('这里是头部Header', props.postType)
     const style = { fontSize: 18 };
 
     const [navArray, setNavArray] = useState([]);
     useEffect(() => {
-
-        const fetchData = async () => {
-            const result = await axios(serviceParh.getTypeInfo).then(
-                (res) => {
-                    setNavArray(res.data.data);
-                    return res.data.data;
-                }
-            )
+        try {
+            const fetchData = async () => {
+                const result = await axios('http://www.ahao.com:9000/default/getTypeInfo').then(
+                    (res) => {
+                        console.log('res这里是Header:', res)
+                        setNavArray(res.data.data);
+                        return res.data.data;
+                    }
+                )
+            }
+            fetchData();
+        } catch (e) {
+            console.error(e)
         }
-        fetchData();
-
     }, []);
 
     //跳转到列表页
@@ -45,9 +48,9 @@ const Header = () => {
             <Row type="flex" justify="center">
                 <Col xs={24} sm={24} md={10} lg={15} xl={12}>
                     <span className="header-logo">
-                        <Link href={{ pathname: '/' }}>
-                            <a>Fong阿蚝</a>
-                        </Link>
+                        {/* <Link href={{ pathname: '/' }}> */}
+                        <a href="/">Fong阿蚝</a>
+                        {/* </Link> */}
                     </span>
                     <span className="header-txt">fongahao的个人网站</span>
                 </Col>
@@ -55,7 +58,7 @@ const Header = () => {
                 <Col className="memu-div" xs={0} sm={0} md={14} lg={8} xl={6}>
                     <Menu
                         mode="horizontal"
-                        // onClick={handleClick}
+                    // onClick={handleClick}
                     >
                         <Menu.Item key="home">
                             <HomeOutlined style={style} />

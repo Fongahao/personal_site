@@ -13,14 +13,14 @@ import Footer from '../components/Footer';
 import ContentHeader from '../components/ContentHeader';
 import Tocify from '../components/tocify.tsx';
 import '../styles/pages/detailed.css';
-import servicePath from '../config/apiUrl';
+import { serviceAPI, clientAPI } from '../config/apiUrl';
 
 
 
 
-const Detailed = (content) => {
+const Detailed = ({ list }) => {
     // console.log(content, '内容');
-    let markdown = content;
+    let markdown = list;
 
     const tocify = new Tocify()
     const renderer = new marked.Renderer();
@@ -83,7 +83,7 @@ const Detailed = (content) => {
                 <Col className="comm-right" xs={0} sm={0} md={7} lg={5} xl={4}>
 
                     <Author />
-                    <Advert />
+                    {/* <Advert /> */}
                     <Affix offsetTop={5}>
                         <div className="detailed-nav comm-box">
                             <div className="nav-title">文章目录</div>
@@ -98,23 +98,44 @@ const Detailed = (content) => {
     )
 }
 
-Detailed.getInitialProps = async (context) => {
+// Detailed.getInitialProps = async (context) => {
 
-    // console.log(context.query.id, '22222222222')
-    let id = context.query.id
-    const promise = new Promise((resolve) => {
+//     console.log(context.query.id, '详情页面的请求文章ID')
+//     let id = context.query.id
+//     const promise = new Promise((resolve) => {
 
-        axios(servicePath.getArticleById, {
+//         axios(serviceAPI.getArticleById, {
+//             params: {
+//                 id: id
+//             }
+//         }).then((res) => {
+//             console.log('详情页面客户端请求数据', res.data)
+//             resolve(res.data.data[0])
+//         }
+//         )
+//     })
+
+//     return await promise
+// }
+
+export async function getServerSideProps(context) {
+    try {
+        const id = context.query.id
+        console.log('detailed页面客户端请求URL:', serviceAPI.getArticleById, id);
+        const res = await axios(serviceAPI.getArticleById, {
             params: {
                 id: id
             }
-        }).then((res) => {
-            // console.log(res.data, 'ahao')
-            resolve(res.data.data[0])
+        })
+        console.log('detailed页面客户端请求数据:', res.data.data);
+        const list = res.data.data[0]
+        return {
+            props: { list },
         }
-        )
-    })
+    } catch (e) {
+        console.error(e)
+    }
 
-    return await promise
 }
+
 export default Detailed

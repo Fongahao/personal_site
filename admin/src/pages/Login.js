@@ -18,7 +18,7 @@ const Login = (props) => {
 
     })
     const checkLogin = () => {
-        
+
         setIsLoading(true);
         if (!userName) {
             message.error('用户名不能为空');
@@ -39,13 +39,14 @@ const Login = (props) => {
             withCredentials: true,
         }).then(
             (res) => {
-                console.log(res.data, '中台返回数据');
+                console.log('这里是前台登录页面');
+                console.log('Login页面:', '\n', '中台返回数据', res.data);
                 setIsLoading(false);
                 if (res.data.data === '登录成功') {
                     localStorage.setItem('openId', res.data.openId);
-                    console.log(localStorage, 'localStorage');
+                    console.log('localStorage', localStorage);
                     props.history.push('/index');
-                    console.log(props, 'props');
+                    console.log('props', props);
                 } else {
                     message.error('用户密码错误！');
                 }
@@ -84,4 +85,5 @@ const Login = (props) => {
         </div>
     )
 }
+
 export default Login;

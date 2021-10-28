@@ -15,7 +15,7 @@ class HomeController extends Controller {
     FROM article LEFT JOIN type ON article.type_id = type.id`;
 
     const results = await this.app.mysql.query(sql);
-    console.log(results, '获取文章列表');
+    console.log('getArticleList', results);
     this.ctx.body = { data: results };
 
   };
@@ -24,7 +24,10 @@ class HomeController extends Controller {
   async getArticleById() {
 
     //先配置路由的动态传值，然后再接收值
-    console.log(this.ctx.query, '1111111111');
+    console.log('参数: this.ctx.query', this.ctx.query);
+    console.log('参数: this.ctx', this.ctx);
+    console.log('参数: this.ctx.request', this.ctx.request);
+    console.log('参数: this.ctx.params', this.ctx.params);
     let id = this.ctx.query.id;
 
     let sql = `SELECT article.id as id,
@@ -39,7 +42,7 @@ class HomeController extends Controller {
       WHERE article.id = ${id}`
 
     const result = await this.app.mysql.query(sql);
-    console.log(result, '通过id获取文章详情');
+    console.log('通过id获取文章详情', result);
     this.ctx.body = { data: result };
 
   };
@@ -48,10 +51,11 @@ class HomeController extends Controller {
   async getTypeInfo() {
 
     const results = await this.app.mysql.select('type');
-    console.log(results, '获取类别名称和编号');
+    console.log('getTypeInfo', results);
     this.ctx.body = { data: results };
 
   };
+
   // 不同类型的文章对应的文章列表
   async getListById() {
     const id = this.ctx.query.id;

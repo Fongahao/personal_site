@@ -32,13 +32,14 @@ const AddArticle = (props) => {
         smartypants: false,
     })
 
-    // 文章内容和简介
+    // 文章内容
     const changeContent = (e) => {
         setArticleContent_md(e.target.value);
         let html = marked(e.target.value);
         setArticleContent_html(html);
     }
 
+    // 文章简介
     const changeIntroduce = (e) => {
         setIntroduce_md(e.target.value);
         let html = marked(e.target.value);
@@ -53,7 +54,7 @@ const AddArticle = (props) => {
             withCredentials: true,
         }).then(
             (res) => {
-                console.log('向中台请求文章分类报文体:', res.request, '\n', '文章分类数据:', res.data);
+                console.log('AddAticle组件:', '\n', '向中台请求文章分类报文体:', res.request, '\n', '文章分类数据:', res.data);
                 if (res.data.data === "没有登录") {
                     localStorage.removeItem('openId');
                     props.history.push('/');
@@ -68,6 +69,7 @@ const AddArticle = (props) => {
         setSelectType(value);
     }
 
+    // 通过文章ID获取文章详情
     const getArticleById = (id) => {
         axios(servicePath.getArticleById + id, {
             withCredentials: true,
@@ -75,6 +77,7 @@ const AddArticle = (props) => {
         }).then(
             (res) => {
                 //let articleInfo= res.data.data[0]
+                console.log('获取文章详情接口:', res)
                 setArticleTitle(res.data.data[0].title)
                 setArticleContent_md(res.data.data[0].article_content)
                 let html = marked(res.data.data[0].article_content)
@@ -88,23 +91,20 @@ const AddArticle = (props) => {
             }
         )
     }
-    
-    useEffect(() => {
 
+    useEffect(() => {
         getTypeInfo();
         let tmpId = props.match.params.id;
         if (tmpId) {
             setArticleId(tmpId);
             getArticleById(tmpId);
         }
-
     }, [])
 
     // 保存文章
     const saveArticle = () => {
 
         // markedContent()
-
         if (!selectedType) {
             message.error('请选择文章类别');
             return false;
@@ -127,8 +127,12 @@ const AddArticle = (props) => {
         dataProps.title = articleTitle;
         dataProps.article_content = articleContent_md;
         dataProps.introduce = introduce_md;
-        const datetext = showDate.replace('-', '/'); // 把字符串转成时间戳
+        console.log('发布日期showDate', showDate)
+        const datetext = showDate.replace(/-/g, '/'); // 把字符串转成时间戳
+        console.log('发布日期datetext', datetext)
         dataProps.addTime = (new Date(datetext).getTime()) / 1000;
+        console.log('文章数据', dataProps)
+
         // dataProps.part_count = partCount;
         // dataProps.article_content_html = articleContent_html;
         // dataProps.introduce_html = introduce_html;
