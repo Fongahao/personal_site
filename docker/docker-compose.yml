@@ -30,7 +30,7 @@ services:
     container_name: react_blog_blog
 
   db: # 数据库，预先使用MySQL容器
-    image: mysql
+    image: react_blog:mysql
     ports:
       - 33061:3306
     restart: on-failure
