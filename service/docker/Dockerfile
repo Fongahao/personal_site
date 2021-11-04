@@ -28,4 +28,8 @@ COPY . /usr/src/service
 # 暴露容器端口
 EXPOSE 9002
 
-CMD yarn start
+# 要明白 CMD 和 ENTRYPOINT 命令的区别，以及配合使用的作用
+# ENTRYPOINT ["yarn"]
+# CMD ["start" ]   
+# CMD ["yarn","start"]
+ENTRYPOINT ["yarn","start"]

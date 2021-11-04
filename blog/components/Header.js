@@ -13,7 +13,7 @@ import {
 
 
 const Header = (props) => {
-    console.log('这里是头部Header', props.postType)
+    console.log('这里是头部Header', props)
     const style = { fontSize: 18 };
 
     const [navArray, setNavArray] = useState([]);

@@ -10,9 +10,12 @@ class MainController extends Controller {
 
     // 判断用户密码是否正确
     async checkLogin() {
-        console.log('验证用户密码登录请求报文:', '\n', this.ctx.request)
-        let userName = this.ctx.request.userName || 'fongahao';
-        let password = this.ctx.request.password || '123456';
+        // console.log('验证用户密码登录请求报文:', '\n', this.ctx.query, this.ctx)
+        // console.log('验证用户密码登录请求报文request:', '\n', this.ctx.request)
+        console.log('验证用户密码登录请求报文request.body:', '\n', this.ctx.request.body)
+        const { userName, password } = this.ctx.request.body;
+        // let userName = this.ctx.request.body;
+        // let password = this.ctx.query.password;
         const sql = `SELECT userName FROM admin_user WHERE userName = '${userName}' AND password = '${password}'`;
 
         // console.log(sql, 'sql')

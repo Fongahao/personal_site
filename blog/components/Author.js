@@ -1,5 +1,7 @@
 import { Avatar, Divider } from 'antd';
 import '../styles/components/author.css';
+import Image from 'next/image'
+// import profilePic from '/profile.png'
 import {
     GithubOutlined,
     QqOutlined,
@@ -13,9 +15,15 @@ const Author = () => {
     return (
         <div className="author-div comm-box">
             <div>
+                {/* <Image
+                    src='/profile.png'
+                    alt="Picture of the author"
+                    width={500}
+                    height={500}
+                /> */}
                 <Avatar
                     size={100}
-                    src=""
+                    src='/profile.jpg'
                     draggable={true}
                 />
             </div>
