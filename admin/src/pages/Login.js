@@ -6,7 +6,7 @@ import { SmileOutlined } from '@ant-design/icons';
 import servicePath from '../config/apiUrl';
 import axios from 'axios';
 
-const openIdContext = createContext();
+// const openIdContext = createContext();
 
 const Login = (props) => {
 
@@ -28,13 +28,15 @@ const Login = (props) => {
             return false;
         }
 
-        let dataProps = {
+        const dataProps = {
             'userName': userName,
             'password': password,
         }
         axios({
             method: 'post',
             url: servicePath.checkLogin,
+            // headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            // data: { ...dataProps },
             data: dataProps,
             withCredentials: true,
         }).then(
